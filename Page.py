@@ -50,7 +50,7 @@ class Page:
         self.contents = file.read()
 
         # Format page number
-        number = number.replace('000', '')
+        number = number.replace('00000', '')
         number = number.replace('.txt', '')
         self.number = number
 
@@ -103,10 +103,16 @@ class Page:
 
         has_poem = False
         for seq in upper_seq:
+            # Create a list of lines for each sequence
             seq_lines = [lines[seq[0] + i] for i in range(seq[1])]
-            is_poem = __verify_poem__(seq_lines)
+
+            is_poem = False
+            # Only check sequences that are at least four lines
+            if len(seq_lines.length) > 4:
+                is_poem = __verify_poem__(seq_lines)
+
             if is_poem:
-                print()
+                print(f"Page: {self.number}\n")
                 for line in seq_lines:
                     print(line)
                 has_poem = True

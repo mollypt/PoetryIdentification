@@ -23,8 +23,7 @@ class Volume:
 
 test1 = Volume("wu.89090394669")
 test1.find_poetry()
-test2 = Volume("wu.89099428336")
-test2.find_poetry()
+
 
 
 
