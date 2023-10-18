@@ -18,7 +18,7 @@ class Volume:
         for page in self.pages:
             if page.has_poetry:
                 poetry_pages.append(page.number)
-        print(poetry_pages)
+                print(page.number)
 
 
 test1 = Volume("wu.89090394669")
