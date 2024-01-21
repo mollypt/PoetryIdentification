@@ -12,17 +12,30 @@ class Volume:
             self.pages.append(page)
 
         self.page_count = len(self.pages)
+        self.poetry_pages = self._find_poetry_pages()
 
-    def find_poetry(self):
+    def _find_poetry_pages(self):
         poetry_pages = []
-        for page in self.pages:
-            if page.has_poetry:
+        for page in self.get_pages():
+            if page.has_poetry():
                 poetry_pages.append(page.number)
-                print(page.number)
+        return poetry_pages
+
+    def get_pages(self):
+        return self.pages
+
+    def get_poetry_pages(self):
+        return self.poetry_pages
+
+    # Prints all identified poems in a volume
+    def print_poems(self):
+        for page in self.get_poetry_pages():
+            for poem in page.get_poems():
+                page.print_lines(poem)
 
 
 test1 = Volume("wu.89090394669")
-test1.find_poetry()
+test1.print_poems()
 
 
 
