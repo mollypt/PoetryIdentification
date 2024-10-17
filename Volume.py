@@ -14,6 +14,7 @@ class Volume:
         self.page_count = len(self.pages)
         self.poetry_pages = self._find_poetry_pages()
 
+    # Return a list of page numbers in the volume that contain poetry.
     def _find_poetry_pages(self):
         poetry_pages = []
         for page in self.get_pages():
@@ -21,15 +22,17 @@ class Volume:
                 poetry_pages.append(page.number)
         return poetry_pages
 
+    # Return a list of all page objects associated with the volume. 
     def get_pages(self):
         return self.pages
 
-    def get_poetry_pages(self):
+    # Return a list of page numbers in the volume that contain poetry.
+    def get_poetry_page_numbers(self):
         return self.poetry_pages
 
-    # Prints all identified poems in a volume
+    # Print all identified poems in a volume.
     def print_poems(self):
-        for page in self.get_poetry_pages():
+        for page in self.get_poetry_page_numbers():
             for poem in page.get_poems():
                 page.print_lines(poem)
 
