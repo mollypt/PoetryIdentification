@@ -38,7 +38,7 @@ class Page:
     # specifying:
     #   1.) the index of the line that begins a sequence of consecutive lines
     #      that begin with a capital letter, number, or quotation
-    #   2.) the sequence length, which is at least min_length
+    #   2.) the sequence length, which is at least min_length.
     def _get_potential_poem(self, min_length):
         upper_seq = []  # a list of tuples (start line, length)
         start_index = -1
@@ -74,10 +74,9 @@ class Page:
         return upper_seq
 
     # Given a page with potential poems, represented in the seq list, apply additional 
-    # crtieria to verify the poems. If a poem is verified, return 1 
-    Apply poem criteria to groupings of size min_length of consecutive lines
-    # provided in String list lines. If poem identified, return 1 for True return and a tuple of the index
-    # where the poem starts and ends. If no grouping of lines meets the criteria, return -1.
+    # crtieria to verify the poems. If a poem is verified, return 1 and a tuple of length 
+    # two containing indices where the poem starts and ends. 
+    # If no grouping of lines meets the criteria, return -1.
     def _verify_poem(self, seq, min_length):
         seq_lines = [self.lines[seq[0] + i] for i in range(seq[1])]
         num_lines = len(seq_lines)
@@ -86,41 +85,37 @@ class Page:
 
         # Get array with the first characters of each line
         for i in range(num_lines):
-            if len(seq_lines[i]) > 0:
-                start_chars[i] = seq_lines[i][0]
-                end_chars[i] = seq_lines[i][-1]
+            start_chars = [line[0] for line in seq_lines if len(line) > 0]
+            end_chars = [line[-1] for line in seq_lines if len(line) > 0]
 
-        # Iterate over each group of size min_length in list lines
+        # Iterate over each group of min_length number of consecutive lines
         for i in range(num_lines - min_length):
-            num_num = 0
-            num_quote = 0
-            num_commas = 0
-            num_short = 0
+            numbers, quotes, commas, short = 0, 0, 0, 0
             for j in range(min_length):
                 # At most two lines can begin in a number
                 if start_chars[i + j].isnumeric():
-                    num_num += 1
+                    numbers += 1
                 # At most one line can begin with a quote
                 if start_chars[i + j] == '"':
-                    num_quote += 1
+                    quotes += 1
                 # At least two lines must end in commas
                 if end_chars[i + j] == ',':
-                    num_commas += 1
+                    commas += 1
                 # At most one line can be short
                 words = seq_lines[i + j].split()
                 if len(words) < 4:
-                    num_short += 1
+                    short += 1
 
             # Passes checks for start and end chars and line length
-            if num_num < 3 and num_quote < 2 and num_commas > 1 and num_short < 2:
+            if numbers < 3 and quotes < 2 and commas > 1 and short < 2:
                 # Most lines start with uppercase chars
-                if len(seq_lines[i])/2 > num_quote + num_num:
+                if len(seq_lines[i])/2 > quotes + numbers:
                     return 1, (i, i+min_length)
             print()
 
         return -1
 
-    # Returns True if poetry is identified, otherwise False
+    # Returns True if poetry is identified, False if not. 
     def find_poetry(self):
         # Return False if page has no lines
         if self.line_count == 0:
@@ -129,11 +124,10 @@ class Page:
         # Poems must be at least four lines long
         min_length = 4
 
-        
         potential_poems = self._get_potential_poem(min_length)
 
         poems = []
-        # Check each sequence of uppercase characters for poem
+        # Verify each sequence of uppercase characters as potential poem
         for seq in potential_poems:
             poem_found, poem_index = self._verify_poem(seq, min_length)
             if poem_found > -1:
