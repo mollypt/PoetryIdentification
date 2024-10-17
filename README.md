@@ -1,6 +1,6 @@
 # Character-level Poetry Detection 
 
-The Princeton Prosody Archive's For Use in Schools Collection contains ~200 19th-century books used to teach English language, 
+The [Princeton Prosody Archive](https://prosody.princeton.edu/)'s For Use in Schools Collection contains ~200 19th-century books used to teach English language, 
 literature, and rhetoric. Many volumes include poetry, and, as part of a research effort to trace poets' influence over time, the Center for 
 Digital Humanities (CDH) wants to know which poems are most prevalent throughtout the collection. To answer this question, we first need 
 to *find* poetry in the collection. 
