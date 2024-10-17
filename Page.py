@@ -21,37 +21,37 @@ class Page:
     def has_poetry(self):
         return len(self.poems) > 0
 
+    # Return all poems associated with a page
     def get_poems(self):
         return self.poems
 
-    # Print lines on the page, starting at index start and ending once the method
-    # has printed length number of lines
+    # Given a page, print length number of lines on the page from the provided start index
     def print_lines(self, start, length):
         end = start + length
+        # Ensure you don't try to print beyond the end of the page
         if len(self.lines) < end:
-            raise Exception("Trying to print more lines than are on the page")
+            end = len(self.lines) - 1
         for i in range(start, start + end):
             print(self.lines[i])
 
-    # Given list of String lines and int min_length, return tuple (int, int)
+    # Given a page and int min_length, return a list of tuples (int, int)
     # specifying:
-    #   1.) the index of list lines that begins a sequence of consecutive lines
-    #        such that each line begins with a capital letter, number, or quotation
+    #   1.) the index of the line that begins a sequence of consecutive lines
+    #      that begin with a capital letter, number, or quotation
     #   2.) the sequence length, which is at least min_length
     def _get_potential_poem(self, min_length):
         upper_seq = []  # a list of tuples (start line, length)
         start_index = -1
         i = -1
 
-        # Iterate through lines
         for line in self.lines:
             i += 1
 
             # Check that current line is not empty
             if len(line) > 0:
-                # Line begins with uppercase, number, or quote
+                # If line begins with uppercase, number, or quote
                 if line[0].isupper() or line[0].isnumeric() or line[0] == '"':
-                    # Enter sequence if not already in one
+                    # Begin counting sequence if not already in one
                     if start_index == -1:
                         start_index = i
 
@@ -60,12 +60,12 @@ class Page:
                         length = i - start_index + 1
                         upper_seq.append((start_index, length))
 
-                # Line does not begin with uppercase, number, or quote
+                # If line does not begin with uppercase, number, or quote
                 else:
                     # End of uppercase sequence
                     if start_index != -1:
                         length = i - start_index
-                        # Sequence has at least four lines
+                        # If sequence has at least four lines, save it
                         if length > min_length:
                             upper_seq.append((start_index, length))
                         # Reset sequence
@@ -73,7 +73,9 @@ class Page:
 
         return upper_seq
 
-    # Apply poem criteria to groupings of size min_length of consecutive lines
+    # Given a page with potential poems, represented in the seq list, apply additional 
+    # crtieria to verify the poems. If a poem is verified, return 1 
+    Apply poem criteria to groupings of size min_length of consecutive lines
     # provided in String list lines. If poem identified, return 1 for True return and a tuple of the index
     # where the poem starts and ends. If no grouping of lines meets the criteria, return -1.
     def _verify_poem(self, seq, min_length):
@@ -124,8 +126,10 @@ class Page:
         if self.line_count == 0:
             return False
 
-        # Specify poems must be at least four lines long
+        # Poems must be at least four lines long
         min_length = 4
+
+        
         potential_poems = self._get_potential_poem(min_length)
 
         poems = []
